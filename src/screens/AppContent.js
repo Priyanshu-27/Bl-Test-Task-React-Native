@@ -1,4 +1,3 @@
-// AppContent.js
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -7,7 +6,8 @@ import {
   Text,
   Dimensions,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  StyleSheet ,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {FETCH_PRODUCTS, addToCart} from '../redux/action';
@@ -17,6 +17,7 @@ import ProductModal from '../components/ProductModal';
 const AppContent = ({navigation}) => {
   const dispatch = useDispatch();
   const products = useSelector(state => state.products);
+  const cart = useSelector(state => state.cart); // Access the cart state
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const width = Dimensions.get('window').width;
@@ -60,6 +61,11 @@ const AppContent = ({navigation}) => {
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate('CheckoutScreen')}>
           <Icon name="basket-outline" style={{color: '#000', fontSize: 20}} />
+          {cart.length > 0 && (
+            <View style={styles.cartBadge}>
+              <Text style={styles.cartBadgeText}>{cart.length}</Text>
+            </View>
+          )}
         </TouchableOpacity>
       </View>
       {loading ? (
@@ -82,5 +88,22 @@ const AppContent = ({navigation}) => {
     </SafeAreaView>
   );
 };
+
+const styles = StyleSheet.create({
+  cartBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -10,
+    backgroundColor: 'red',
+    borderRadius: 50,
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  cartBadgeText: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight:'bold'
+  },
+});
 
 export default AppContent;
